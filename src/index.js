@@ -81,7 +81,14 @@ function returnCounter(number = 0) {
  Пример:
    returnArgumentsArray(1, 2, 3) вернет [1, 2, 3]
  */
-function returnArgumentsArray(...args) {
+function returnArgumentsArray() {
+
+    let args = [];
+
+    for (let i = 0; i < arguments.length; i++) {
+        args[i] = arguments[i];
+    }
+
     return args
 }
 
@@ -100,11 +107,19 @@ function returnArgumentsArray(...args) {
 
    console.log(newSum()) выведет 6
  */
-function bindFunction(F, ...valuesArr) {
+function bindFunction() {
 
-    F = F.bind(null, valuesArr.join(''));
+    let F = arguments[0];
 
-    return F
+    let args = [];
+
+    for (let i = 0; i < arguments.length; i++) {
+        args[i] = arguments[i];
+    }
+
+    let dopArguments = args.slice(1).join(',');
+
+    return F = F.bind(null, dopArguments)   
 }
 
 export {
