@@ -107,9 +107,7 @@ function returnArgumentsArray() {
 
    console.log(newSum()) выведет 6
  */
-function bindFunction() {
-
-    let F = arguments[0];
+function bindFunction(F) {
 
     let args = [];
 
