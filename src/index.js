@@ -86,7 +86,7 @@ function returnArgumentsArray() {
     let args = [];
 
     for (let i = 0; i < arguments.length; i++) {
-        args[i] = arguments[i];
+        args.push(arguments[i])
     }
 
     return args
@@ -111,13 +111,12 @@ function bindFunction(F) {
 
     let args = [];
 
-    for (let i = 0; i < arguments.length; i++) {
-        args[i] = arguments[i];
+    for (let i = 1; i < arguments.length; i++) {
+        args.push(arguments[i])
+        F = F.bind(null, arguments[i])
     }
 
-    let dopArguments = args.slice(1).join(',');
-
-    return F = F.bind(null, dopArguments)   
+    return F
 }
 
 export {
