@@ -32,9 +32,7 @@ function returnFirstArgument(parameter) {
  */
 function sumWithDefaults(a, b=100) {
 
-    let sum = a + b;
-
-    return sum
+    return a + b
 }
 
 /*
@@ -47,9 +45,7 @@ function sumWithDefaults(a, b=100) {
  */
 function returnFnResult(fn) {
 
-    let result = fn();
-
-    return result 
+    return fn() 
 }
 
 /*
@@ -67,9 +63,7 @@ function returnFnResult(fn) {
  */
 function returnCounter(number = 0) {
 
-    let F = () => ++number;
-
-    return F
+    return () => ++number
 }
 
 /*
