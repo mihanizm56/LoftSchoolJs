@@ -128,12 +128,13 @@ function slice(array, from = 0, to = array.length - 1) {
   console.log(`i = ${i} finish = ${finish}`)
   let result = [];
   if (array.length == 0) {
+    console.log('mistake 1')
     return []
   }
 
   if (from < 0) {
     if (array.length + i < 0) {
-      console.log('mistake 1')
+      console.log('mistake 2')
       return []
     }
     else {
@@ -143,7 +144,7 @@ function slice(array, from = 0, to = array.length - 1) {
 
   if (finish < 0) {
     if (array.length + finish < 0) {
-      console.log('mistake 2')
+      console.log('mistake 3')
       return []
     }
     else {
@@ -152,7 +153,7 @@ function slice(array, from = 0, to = array.length - 1) {
   }
 
   if (finish < i || !array[finish] || !array[i]) {
-    console.log('mistake 3')
+    console.log('mistake 4')
     return []
   }
 
@@ -172,7 +173,13 @@ function slice(array, from = 0, to = array.length - 1) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
-
+  let proxy = new Proxy(obj, {
+    set: function (target, prop, value) {
+      target[prop] = value * value
+      return true
+    }
+  })
+  return proxy
 }
 
 export {
