@@ -122,9 +122,9 @@ function upperProps(obj) {
 //   return arr
 // }
 
-function slice(array, from, to) {
-  let i = from !== undefined ? from : 0;
-  let finish = to !== undefined && to < array.length ? to : array.length - 1;
+function slice(array, from = 0, to = array.length - 1) {
+  let i = from;
+  let finish = to;
   console.log(`i = ${i} finish = ${finish}`)
   let result = [];
   if (array.length == 0) {
