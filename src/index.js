@@ -86,30 +86,79 @@ function upperProps(obj) {
 //   return arr
 // }
 
-function slice(array, from, to = array.length - 1) {
-  let arr = [];
-  if (array.length === 0) {
-    console.error('Ваш массив пустой!')
+// function slice(array, from, to = array.length - 1) {
+//   let arr = [];
+//   if (array.length === 0) {
+//     console.error('Ваш массив пустой!')
+//   }
+//   else if (to < from || to < 1 || !array[to]) {
+//     console.error('Введите правильный конечный номер массива!')
+//   }
+//   else if (from < 0) {
+//     if (array.length + from < 0) {
+//       console.error('Введите правильный начальный номер массива')
+//     }
+//     else {
+//       for (let i = array.length + from; i <= to; i++) {
+//         arr.push(array[i])
+//       }
+//     }
+//   }
+//   else if (to < 0) {
+//     if (array.length + to < 0) {
+//       console.error('Введите правильный конечный номер массива')
+//     }
+//     else {
+//       for (let i = from; i <= array.length + to; i++) {
+//         arr.push(array[i])
+//       }
+//     }
+//   } 
+//   else {
+//     for (let i = from; i <= to; i++) {
+//       arr.push(array[i])
+//     }
+//   }
+//   return arr
+// }
+
+function slice(array, from = 0, to = array.length) {
+  let i = from;
+  let finish = to;
+  let result = [];
+
+  if (!array.length) {
+    return []
   }
-  else if (to < from || to < 1 || !array[to]) {
-    console.error('Введите правильный конечный номер массива!')
-  }
-  else if (from < 0) {
-    if (array.length + from < 0) {
-      console.error('Введите правильный начальный номер массива')
+
+  if (i < 0) {
+    if (array.length + i < 0) {
+      return []
     }
     else {
-      for (let i = array.length + from; i <= to; i++) {
-        arr.push(array[i])
-      }
+      i = array.length + i
     }
   }
-  else {
-    for (let i = from; i <= to; i++) {
-      arr.push(array[i])
+
+  if (finish < 0) {
+    if (array.length + finish < 0) {
+      return []
+    }
+    else {
+      finish = array.length + finish
     }
   }
-  return arr
+
+  if (finish < i || !array[finish] || !array[i]) {
+    return []
+  }
+
+  for (; i <= finish; i++) {
+    result.push(array[i]);
+  }
+
+  return result;
+
 }
 
 
