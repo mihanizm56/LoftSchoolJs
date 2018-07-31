@@ -122,17 +122,18 @@ function upperProps(obj) {
 //   return arr
 // }
 
-function slice(array, from = 0, to = array.length) {
-  let i = from;
-  let finish = to;
+function slice(array, from, to) {
+  let i = from !== undefined ? from : 0;
+  let finish = to !== undefined && to < array.length ? to : array.length - 1;
+  console.log(`i = ${i} finish = ${finish}`)
   let result = [];
-
-  if (!array.length) {
+  if (array.length == 0) {
     return []
   }
 
-  if (i < 0) {
+  if (from < 0) {
     if (array.length + i < 0) {
+      console.log('mistake 1')
       return []
     }
     else {
@@ -142,6 +143,7 @@ function slice(array, from = 0, to = array.length) {
 
   if (finish < 0) {
     if (array.length + finish < 0) {
+      console.log('mistake 2')
       return []
     }
     else {
@@ -150,10 +152,11 @@ function slice(array, from = 0, to = array.length) {
   }
 
   if (finish < i || !array[finish] || !array[i]) {
+    console.log('mistake 3')
     return []
   }
 
-  for (; i <= finish; i++) {
+  for (i; i <= finish; i++) {
     result.push(array[i]);
   }
 

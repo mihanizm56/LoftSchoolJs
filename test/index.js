@@ -13,7 +13,7 @@ import {
     createProxy
 } from '../src/index';
 
-describe('ДЗ 3 - объекты и массивы', () => {
+describe('ДЗ 2 - объекты и массивы', () => {
     describe('forEach', () => {
         it('должна вызывать функцию для каждого элемента массива и передавать элемент первым аргументом', () => {
             let array = randomNumberArray();
