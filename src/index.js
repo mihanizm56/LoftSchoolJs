@@ -86,9 +86,25 @@ function upperProps(obj) {
 //   return arr
 // }
 
-function slice(array, from, to) {
+function slice(array, from, to = array.length - 1) {
   let arr = [];
-  if (array.length > 0 && from <= to && from >= 0 && to > 0 && array[to]) {
+  if (array.length === 0) {
+    console.error('Ваш массив пустой!')
+  }
+  else if (to < from || to < 1 || !array[to]) {
+    console.error('Введите правильный конечный номер массива!')
+  }
+  else if (from < 0) {
+    if (array.length + from < 0) {
+      console.error('Введите правильный начальный номер массива')
+    }
+    else {
+      for (let i = array.length + from; i <= to; i++) {
+        arr.push(array[i])
+      }
+    }
+  }
+  else {
     for (let i = from; i <= to; i++) {
       arr.push(array[i])
     }
