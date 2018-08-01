@@ -17,6 +17,31 @@
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
 function isAllTrue(array, fn) {
+  let debugParameter = 0;
+  let funcParameter;
+
+  if (array.length == 0 || !(array instanceof Array)) {
+    //console.log("empty array")
+    throw new Error("empty array");
+  }
+  else if (typeof fn != 'function') {
+    //console.log("fn is not a function")
+    throw new Error("fn is not a function");
+  }
+  else {
+    for (let i = 0; i < array.length; i++) {
+      funcParameter = fn(array[i]);
+      if (!funcParameter) {
+        debugParameter++;
+      }
+    }
+    if (debugParameter > 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
 }
 
 /*
@@ -36,6 +61,31 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
+  let debugParameter = 0;
+  let funcParameter;
+
+  if (array.length == 0 || !(array instanceof Array)) {
+    //console.log("empty array")
+    throw new Error("empty array");
+  }
+  else if (typeof fn != 'function') {
+    //console.log("fn is not a function")
+    throw new Error("fn is not a function");
+  }
+  else {
+    for (let i = 0; i < array.length; i++) {
+      funcParameter = fn(array[i]);
+      if (funcParameter) {
+        debugParameter++;
+      }
+    }
+    if (debugParameter > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 }
 
 /*
@@ -50,6 +100,21 @@ function isSomeTrue(array, fn) {
    - fn не является функцией (с текстом "fn is not a function")
  */
 function returnBadArguments(fn) {
+  let x = new Array();
+  let num = '';
+  if (typeof fn != 'function') {
+    throw new Error("fn is not a function");
+  }
+  else{
+    for (var i = 1; i < arguments.length; i++) {
+      try {
+        num = fn(arguments[i]);
+      } catch (e) {
+        x.push(arguments[i]);
+      }
+    }
+  }
+  return x
 }
 
 /*
