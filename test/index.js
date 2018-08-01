@@ -222,8 +222,8 @@ describe('ДЗ 2 - объекты и массивы', () => {
             result = slice(array, 3, 100);
             assert.deepEqual(result, target);
 
-            target = nativeSlice.call(array, 3, 5);
-            result = slice(array, 3, 5);
+            target = nativeSlice.call(array, 3, 6);
+            result = slice(array, 3, 6);
             assert.deepEqual(result, target);
 
             target = nativeSlice.call(array, 9999);
