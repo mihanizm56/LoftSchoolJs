@@ -84,7 +84,7 @@ function slice(array, from, to) {
     if (i < 0) {
         i = array.length + i
         if(i < 0){
-            i=0
+            i = 0
         } 
     }
 
