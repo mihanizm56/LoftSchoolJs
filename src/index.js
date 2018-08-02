@@ -101,14 +101,13 @@ function isSomeTrue(array, fn) {
  */
 function returnBadArguments(fn) {
   let x = new Array();
-  let num = '';
   if (typeof fn != 'function') {
     throw new Error("fn is not a function");
   }
   else{
     for (var i = 1; i < arguments.length; i++) {
       try {
-        num = fn(arguments[i]);
+        fn(arguments[i]);
       } catch (e) {
         x.push(arguments[i]);
       }
