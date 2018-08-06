@@ -11,9 +11,9 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
-  var div = document.createElement('div');
-  div.innerText = text;
-  return div;
+  let container = document.createElement('div');
+  container.textContent = text;
+  return container
 }
 
 /*
@@ -25,8 +25,10 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
-  where.prepend(what);
-}
+  let whereToAdd = where.childNodes[0];
+  where.insertBefore(what, whereToAdd);
+  return
+} 
 
 /*
  Задание 3:
@@ -48,7 +50,17 @@ function prepend(what, where) {
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+  let arrayOfChildren = [];
+  let children = where.children;
+  for (let i = 0; i < children.length-1; i++) {
+    if (children[i].nextElementSibling.tagName === 'P') {
+      arrayOfChildren.push(children[i])
+    }
+  }
+  return arrayOfChildren
 }
+
+
 
 /*
  Задание 4:
@@ -68,14 +80,14 @@ function findAllPSiblings(where) {
    findError(document.body) // функция должна вернуть массив с элементами 'привет' и 'loftschool'
  */
 function findError(where) {
-    var result = [];
-
-    for (var child of where.childNodes) {
-        result.push(child.innerText);
+    let result = [];
+    let children = where.children;
+    for (let i = 0; i < children.length; i++) {
+      result.push(children[i].textContent)
     }
-
-    return result;
+    return result
 }
+
 
 /*
  Задание 5:
@@ -90,7 +102,15 @@ function findError(where) {
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+  for (let i = 0; i < where.childNodes.length; i++) {
+    if (where.childNodes[i].nodeType === 3){
+      where.childNodes[i].parentNode.removeChild(where.childNodes[i])
+    }
+  } 
 }
+
+
+
 
 /*
  Задание 6:
