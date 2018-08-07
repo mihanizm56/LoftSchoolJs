@@ -25,8 +25,7 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
-  let whereToAdd = where.childNodes[0];
-  where.insertBefore(what, whereToAdd);
+  where.insertBefore(what, where.childNodes[0]);
   return
 } 
 
@@ -52,7 +51,8 @@ function prepend(what, where) {
 function findAllPSiblings(where) {
   let arrayOfChildren = [];
   let children = where.children;
-  for (let i = 0; i < children.length-1; i++) {
+  let childrenLength = where.children.length;
+  for (let i = 0; i < childrenLength - 1; i++) {
     if (children[i].nextElementSibling.tagName === 'P') {
       arrayOfChildren.push(children[i])
     }
@@ -82,7 +82,8 @@ function findAllPSiblings(where) {
 function findError(where) {
     let result = [];
     let children = where.children;
-    for (let i = 0; i < children.length; i++) {
+    let childrenLength = where.children.length;
+    for (let i = 0; i < childrenLength; i++) {
       result.push(children[i].textContent)
     }
     return result
@@ -102,9 +103,11 @@ function findError(where) {
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
-  for (let i = 0; i < where.childNodes.length; i++) {
-    if (where.childNodes[i].nodeType === 3){
-      where.childNodes[i].parentNode.removeChild(where.childNodes[i])
+  let childNodes = where.childNodes;
+  //let childNodesLength = childNodes.length; Почему кэширование длины коллекции элементов не работает???
+  for (let i = 0; i < childNodes.length; i++) {
+    if (childNodes[i].nodeType === 3){
+      childNodes[i].parentNode.removeChild(childNodes[i])
     }
   } 
 }
@@ -125,6 +128,18 @@ function deleteTextNodes(where) {
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+
+  for (let i = 0; i < where.childNodes.length; i++) {
+    let child = where.childNodes[i];
+
+    if (child.nodeType === 3) {
+      where.removeChild(child); //удаляем ребенка
+      i--; // уменьшаем счетчик т.к. все сместилось
+    }  
+    
+    deleteTextNodesRecursive(child); // вызываем рекурсию
+    
+  }
 }
 
 /*
@@ -147,7 +162,63 @@ function deleteTextNodesRecursive(where) {
      texts: 3
    }
  */
-function collectDOMStat(root) {
+function collectDOMStat(where) {
+  let childNodes = where.childNodes;
+  let statistics = {
+    tags: {},
+    classes: {},
+    texts: 0
+  };
+
+
+  for (let i = 0; i < childNodes.length; i++) {
+
+    if (childNodes[i].childNodes) { 					//проверка дочерних элементов дочерних элементов переданного родителя
+
+      let childsOfChilds = childNodes[i].childNodes;
+
+      for (let k = 0; k < childsOfChilds.length; k++) {
+
+        if (childNodes[i].nodeType === 3) {				// сборка инфы о текстовых узлах
+          statistics.texts++
+        }
+
+        if (childsOfChilds[k].className) { 				// проверка многоимённости класса
+          let names = childsOfChilds[k].className.split(' ');
+          //console.log(`names = ${names.length}`)
+
+          for (let j = 0; j < names.length; j++) {
+            statistics.classes[names[j]] = + 1
+          }
+
+        }
+
+        if (childsOfChilds[k].nodeType === 1) { 			// если это элемент то имя его в статистику
+          statistics.tags[childsOfChilds[k].tagName] = + 1
+        }
+
+      }
+    }
+
+
+    if (childNodes[i].nodeType === 3) {						// сборка инфы о текстовых узлах детей переданного элементв
+      statistics.texts++
+    }
+    if (childNodes[i].className) {							// проверка многоимённости класса
+      let names = childNodes[i].className.split(' ');
+
+      for (let j = 0; j < names.length; j++) {
+        statistics.classes[names[j]] = + 1
+      }
+
+      //statistics.classes[childNodes[i].className] =+ 1
+    }
+    if (childNodes[i].nodeType === 1) {						// если это элемент то имя его в статистику
+      statistics.tags[childNodes[i].tagName] = + 1
+    }
+  }
+  console.log(statistics)
+  return statistics
 }
 
 /*
