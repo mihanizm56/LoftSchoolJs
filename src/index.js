@@ -162,63 +162,107 @@ function deleteTextNodesRecursive(where) {
      texts: 3
    }
  */
-function collectDOMStat(where) {
-  let childNodes = where.childNodes;
-  let statistics = {
-    tags: {},
-    classes: {},
-    texts: 0
-  };
+// function collectDOMStat(where) {
+//   let childNodes = where.childNodes;
+//   let statistics = {
+//     tags: {},
+//     classes: {},
+//     texts: 0
+//   };
 
 
-  for (let i = 0; i < childNodes.length; i++) {
+//   for (let i = 0; i < childNodes.length; i++) {
 
-    if (childNodes[i].childNodes) { 					//проверка дочерних элементов дочерних элементов переданного родителя
+//     if (childNodes[i].childNodes) { 					//проверка дочерних элементов дочерних элементов переданного родителя
 
-      let childsOfChilds = childNodes[i].childNodes;
+//       let childsOfChilds = childNodes[i].childNodes;
 
-      for (let k = 0; k < childsOfChilds.length; k++) {
+//       for (let k = 0; k < childsOfChilds.length; k++) {
 
-        if (childNodes[i].nodeType === 3) {				// сборка инфы о текстовых узлах
-          statistics.texts++
-        }
+//         if (childNodes[i].nodeType === 3) {				// сборка инфы о текстовых узлах
+//           statistics.texts++
+//         }
 
-        if (childsOfChilds[k].className) { 				// проверка многоимённости класса
-          let names = childsOfChilds[k].className.split(' ');
-          //console.log(`names = ${names.length}`)
+//         if (childsOfChilds[k].className) { 				// проверка многоимённости класса
+//           let names = childsOfChilds[k].className.split(' ');
+//           //console.log(`names = ${names.length}`)
 
-          for (let j = 0; j < names.length; j++) {
-            statistics.classes[names[j]] = + 1
+//           for (let j = 0; j < names.length; j++) {
+//             statistics.classes[names[j]] = + 1
+//           }
+
+//         }
+
+//         if (childsOfChilds[k].nodeType === 1) { 			// если это элемент то имя его в статистику
+//           statistics.tags[childsOfChilds[k].tagName] = + 1
+//         }
+
+//       }
+//     }
+
+
+//     if (childNodes[i].nodeType === 3) {						// сборка инфы о текстовых узлах детей переданного элементв
+//       statistics.texts++
+//     }
+//     if (childNodes[i].className) {							// проверка многоимённости класса
+//       let names = childNodes[i].className.split(' ');
+
+//       for (let j = 0; j < names.length; j++) {
+//         statistics.classes[names[j]] = + 1
+//       }
+
+//       //statistics.classes[childNodes[i].className] =+ 1
+//     }
+//     if (childNodes[i].nodeType === 1) {						// если это элемент то имя его в статистику
+//       statistics.tags[childNodes[i].tagName] = + 1
+//     }
+//   }
+//   console.log(statistics)
+//   return statistics
+// }
+
+
+function collectDOMStat(where, obj = {}) {
+
+  obj.tags = obj.tags || {};
+  obj.classes = obj.classes || {};
+  obj.texts = obj.texts || 0;
+
+  for (let i = 0; i < where.childNodes.length; i++) {
+
+    let child = where.childNodes[i];
+    let childClasses = child.classList;
+
+    if (child.nodeType === 3) {
+      obj.texts++;
+
+    } else {
+
+      if (obj.tags[child.tagName]) {
+        obj.tags[child.tagName] = ++obj.tags[child.tagName];
+      } else {
+        obj.tags[child.tagName] = 1
+      }
+
+      if (childClasses.length > 0) {
+        for (let childClass of childClasses) {
+
+          if (obj.classes[childClass]) {
+            obj.classes[childClass] = ++obj.classes[childClass];
+          } else {
+            obj.classes[childClass] = 1;
           }
-
         }
-
-        if (childsOfChilds[k].nodeType === 1) { 			// если это элемент то имя его в статистику
-          statistics.tags[childsOfChilds[k].tagName] = + 1
-        }
-
-      }
-    }
-
-
-    if (childNodes[i].nodeType === 3) {						// сборка инфы о текстовых узлах детей переданного элементв
-      statistics.texts++
-    }
-    if (childNodes[i].className) {							// проверка многоимённости класса
-      let names = childNodes[i].className.split(' ');
-
-      for (let j = 0; j < names.length; j++) {
-        statistics.classes[names[j]] = + 1
       }
 
-      //statistics.classes[childNodes[i].className] =+ 1
     }
-    if (childNodes[i].nodeType === 1) {						// если это элемент то имя его в статистику
-      statistics.tags[childNodes[i].tagName] = + 1
-    }
+
+    obj = collectDOMStat(child, obj);
+
   }
-  console.log(statistics)
-  return statistics
+
+  return obj
+
 }
 
 /*
