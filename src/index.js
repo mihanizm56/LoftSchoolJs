@@ -137,7 +137,7 @@ function deleteTextNodesRecursive(where) {
       i--; // уменьшаем счетчик т.к. все сместилось
     }  
     
-    deleteTextNodesRecursive(child); // вызываем рекурсию
+    deleteTextNodesRecursive(child);
     
   }
 }
@@ -229,7 +229,6 @@ function collectDOMStat(where, obj = {}) {
   obj.texts = obj.texts || 0;
 
   for (let i = 0; i < where.childNodes.length; i++) {
-
     let child = where.childNodes[i];
     let childClasses = child.classList;
 
@@ -239,7 +238,7 @@ function collectDOMStat(where, obj = {}) {
     } else {
 
       if (obj.tags[child.tagName]) {
-        obj.tags[child.tagName] = ++obj.tags[child.tagName];
+        obj.tags[child.tagName]++
       } else {
         obj.tags[child.tagName] = 1
       }
@@ -248,13 +247,12 @@ function collectDOMStat(where, obj = {}) {
         for (let childClass of childClasses) {
 
           if (obj.classes[childClass]) {
-            obj.classes[childClass] = ++obj.classes[childClass];
+            obj.classes[childClass]++
           } else {
             obj.classes[childClass] = 1;
           }
         }
       }
-
     }
 
     obj = collectDOMStat(child, obj);
