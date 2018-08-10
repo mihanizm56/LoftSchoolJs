@@ -67,6 +67,7 @@ function delegate(target, fn) {
       fn()
     }
   })
+  return
 }
 
 /*
@@ -84,6 +85,7 @@ function once(target,fn) {
     target.removeEventListener('click', callToRemove);
   };
   target.addEventListener('click', callToRemove);
+  return
 }
 
 export {
