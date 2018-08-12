@@ -11,8 +11,11 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
-  let container = document.createElement('div');
+
+  const container = document.createElement('div');
+
   container.textContent = text;
+
   return container
 }
 
@@ -25,8 +28,7 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
-  where.insertBefore(what, where.childNodes[0]);
-  return
+  where.insertBefore(what, where.firstChild);
 } 
 
 /*
@@ -51,9 +53,9 @@ function prepend(what, where) {
 function findAllPSiblings(where) {
   let arrayOfChildren = [];
   let children = where.children;
-  let childrenLength = where.children.length;
-  for (let i = 0; i < childrenLength - 1; i++) {
-    if (children[i].nextElementSibling.tagName === 'P') {
+  let childrenLength = children.length;
+  for (let i = 0; i < childrenLength; i++) {
+    if (children[i].nextElementSibling && children[i].nextElementSibling.tagName === 'P') {
       arrayOfChildren.push(children[i])
     }
   }
@@ -103,11 +105,12 @@ function findError(where) {
    должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+
   let childNodes = where.childNodes;
-  //let childNodesLength = childNodes.length; Почему кэширование длины коллекции элементов не работает???
-  for (let i = 0; i < childNodes.length; i++) {
+
+  for (let i = childNodes.length-1; i >= 0; i--) {
     if (childNodes[i].nodeType === 3){
-      childNodes[i].parentNode.removeChild(childNodes[i])
+      where.removeChild(childNodes[i])
     }
   } 
 }
@@ -136,9 +139,9 @@ function deleteTextNodesRecursive(where) {
       where.removeChild(child); //удаляем ребенка
       i--; // уменьшаем счетчик т.к. все сместилось
     }  
-    
-    deleteTextNodesRecursive(child); // вызываем рекурсию
-    
+    if (child.childNodes.length>0){
+      deleteTextNodesRecursive(child); // вызываем рекурсию
+    }
   }
 }
 
@@ -225,7 +228,7 @@ function deleteTextNodesRecursive(where) {
 function collectDOMStat(where, obj = {}) {
 
   obj.tags = obj.tags || {};
-  obj.classes = obj.classes || {};
+  obj.classes = obj.classes || {}; //подправить
   obj.texts = obj.texts || 0;
 
   for (let i = 0; i < where.childNodes.length; i++) {
@@ -254,7 +257,6 @@ function collectDOMStat(where, obj = {}) {
           }
         }
       }
-
     }
 
     obj = collectDOMStat(child, obj);
