@@ -29,7 +29,7 @@ function createDivWithText(text) {
  */
 function prepend(what, where) {
   where.insertBefore(what, where.firstChild);
-} 
+}
 
 /*
  Задание 3:
@@ -82,13 +82,13 @@ function findAllPSiblings(where) {
    findError(document.body) // функция должна вернуть массив с элементами 'привет' и 'loftschool'
  */
 function findError(where) {
-    let result = [];
-    let children = where.children;
-    let childrenLength = where.children.length;
-    for (let i = 0; i < childrenLength; i++) {
-      result.push(children[i].textContent)
-    }
-    return result
+  let result = [];
+  let children = where.children;
+  let childrenLength = where.children.length;
+  for (let i = 0; i < childrenLength; i++) {
+    result.push(children[i].textContent)
+  }
+  return result
 }
 
 
@@ -108,11 +108,11 @@ function deleteTextNodes(where) {
 
   let childNodes = where.childNodes;
 
-  for (let i = childNodes.length-1; i >= 0; i--) {
-    if (childNodes[i].nodeType === 3){
+  for (let i = childNodes.length - 1; i >= 0; i--) {
+    if (childNodes[i].nodeType === 3) {
       where.removeChild(childNodes[i])
     }
-  } 
+  }
 }
 
 
@@ -138,8 +138,8 @@ function deleteTextNodesRecursive(where) {
     if (child.nodeType === 3) {
       where.removeChild(child); //удаляем ребенка
       i--; // уменьшаем счетчик т.к. все сместилось
-    }  
-    if (child.childNodes.length>0){
+    }
+    if (child.childNodes.length > 0) {
       deleteTextNodesRecursive(child); // вызываем рекурсию
     }
   }
@@ -303,12 +303,12 @@ function observeChildNodes(where, fn) {
 }
 
 export {
-    createDivWithText,
-    prepend,
-    findAllPSiblings,
-    findError,
-    deleteTextNodes,
-    deleteTextNodesRecursive,
-    collectDOMStat,
-    observeChildNodes
+  createDivWithText,
+  prepend,
+  findAllPSiblings,
+  findError,
+  deleteTextNodes,
+  deleteTextNodesRecursive,
+  collectDOMStat,
+  observeChildNodes
 };
