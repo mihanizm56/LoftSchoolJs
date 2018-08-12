@@ -10,7 +10,6 @@
  */
 function addListener(eventName, target, fn) {
   target.addEventListener(eventName,fn)
-  return
 }
 
 /*
@@ -23,7 +22,6 @@ function addListener(eventName, target, fn) {
  */
 function removeListener(eventName, target, fn) {
   target.removeEventListener(eventName, fn)
-  return 
 }
 
 /*
@@ -36,7 +34,6 @@ function removeListener(eventName, target, fn) {
  */
 function skipDefault(eventName, target) {
   target.addEventListener(eventName, e => e.preventDefault())
-  return 
 }
 
 /*
@@ -49,7 +46,7 @@ function skipDefault(eventName, target) {
  */
 function emulateClick(target) {
   target.dispatchEvent(new MouseEvent('click'));
-  return 
+  return
 }
 
 /*
@@ -61,13 +58,18 @@ function emulateClick(target) {
  Пример:
    delegate(document.body, () => console.log('кликнули на button')) // добавит такой обработчик кликов для body, который будет вызывать указанную функцию только если кликнули на кнопку (элемент с тегом button)
  */
-function delegate(target, fn) {
-  target.addEventListener('click', function (e) {
-    if (e.target.tagName === "BUTTON") {
-      fn()
+function delegate(where,fn) {
+
+  for (let i = 0; i < where.childNodes.length; i++) {
+    let child = where.childNodes[i];
+
+    if (child.tagName === "BUTTON") {
+      child.addEventListener('click', fn)
     }
-  })
-  return
+    if (child.childNodes.length > 0) {
+      delegate(child);
+    }
+  }
 }
 
 /*
@@ -85,7 +87,6 @@ function once(target,fn) {
     target.removeEventListener('click', callToRemove);
   };
   target.addEventListener('click', callToRemove);
-  return
 }
 
 export {
