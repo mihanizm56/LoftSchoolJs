@@ -13,6 +13,7 @@ import { resolve } from "path";
 function delayPromise(seconds) {
   return new Promise(resolve => {
     setTimeout(() => {
+      console.log('resolved')
       resolve();
     }, seconds*1000);
   });
