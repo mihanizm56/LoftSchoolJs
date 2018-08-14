@@ -22,7 +22,7 @@
 
 /*
  homeworkContainer - это контейнер для всех ваших домашних заданий
- Если вы создаете новые html-элементы и добавляете их на страницу, то дабавляйте их только в этот контейнер
+ Если вы создаете новые html-элементы и добавляете их на страницу, то добавляйте их только в этот контейнер
 
  Пример:
    const newDiv = document.createElement('div');
@@ -37,6 +37,30 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+    xhr.responseType = 'json';
+    xhr.send();
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 400) {
+        reject()
+      }
+      else {
+        resolve(xhr.response.sort(function (a, b) {
+          if (a.name > b.name) {
+            return 1
+          }
+          if (a.name < b.name) {
+            return -1
+          }
+          return 0
+        }))
+      }
+    });
+    xhr.addEventListener('error', reject);
+    xhr.addEventListener('abort', reject);
+  })
 }
 
 /*
@@ -51,7 +75,26 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+  full = full.toLowerCase();
+  chunk = chunk.toLowerCase();
+  if (full.indexOf(chunk) > -1) {
+    return true;
+  } else {
+    return false;
+  }
 }
+
+function createLi(where, what) {
+
+  where.innerHTML = '';
+  console.log(`what = ${what}, where = ${where}, length of what = ${what.length}`)
+  for(let i = 0; i < what.length;i++){
+    let li = document.createElement('li');
+    li.textContent = what[i];
+    where.appendChild(li);
+  }
+}
+
 
 /* Блок с надписью "Загрузка" */
 const loadingBlock = homeworkContainer.querySelector('#loading-block');
@@ -62,8 +105,27 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-filterInput.addEventListener('keyup', function() {
-    // это обработчик нажатия кливиш в текстовом поле
+let cities = [];
+
+loadTowns()
+  .then(result => {
+    cities = result;
+    loadingBlock.style.display = 'none';
+    filterBlock.style.display = 'block';
+  });
+
+filterInput.addEventListener('keyup', function () {
+  if (!filterInput.value){
+    filterResult.innerHTML = ''
+  }
+  else{
+    let result = cities
+      .filter(item => isMatching(item.name, filterInput.value))
+      .map(item => `${item.name}`)
+
+    createLi(filterResult, result)
+    
+  }
 });
 
 export {
