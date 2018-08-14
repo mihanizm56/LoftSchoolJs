@@ -1,3 +1,5 @@
+import { resolve } from "path";
+
 /* ДЗ 6 - Асинхронность и работа с сетью */
 
 /*
@@ -25,6 +27,30 @@ function delayPromise(seconds) {
    loadAndSortTowns().then(towns => console.log(towns)) // должна вывести в консоль отсортированный массив городов
  */
 function loadAndSortTowns() {
+  return new Promise((resolve,reject)=>{
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+    xhr.responseType = 'json';
+    xhr.send();
+    xhr.addEventListener('load',()=>{
+      if (xhr.status >= 400){
+        reject()
+      }
+      else{
+        resolve(xhr.response.sort(function (a, b) {
+          if (a.name > b.name) {
+            return 1;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          return 0;
+        }));
+      }
+    });
+    xhr.addEventListener('error',reject);
+    xhr.addEventListener('abort', reject);
+  })
 }
 
 export {
