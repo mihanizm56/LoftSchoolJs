@@ -73,22 +73,16 @@ function getCookiesInObject() {
 function addCokieInTable() {
   //console.log(`получили в addCokieInTable name = ${name}, value = ${value}`);
   const cookieObject = getCookiesInObject();
-  
+  listTable.innerHTML = '';
   for (let key in cookieObject) {
-    if (!cookieObject[key]){
-      console.log(`получили пустоту!`);
-      listTable.innerHTML = '';
-    }
-    else{
-      listTable.innerHTML += `
-      <tr>
-        <td class="first_td">${key}</td>
-        <td>${cookieObject[key]}</td>
-        <td>
-          <button class="del" data-key="${key}">Удалить</button>
-        </td>
-      </tr>`;
-    }
+    listTable.innerHTML += `
+    <tr>
+      <td class="first_td">${key}</td>
+      <td>${cookieObject[key]}</td>
+      <td>
+        <button class="del" data-key="${key}">Удалить</button>
+      </td>
+    </tr>`;
   }
 }
 
