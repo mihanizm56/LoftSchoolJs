@@ -43,10 +43,88 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+// при загрузке страницы
+
+addCokieInTable();
+
+function addCokie(name, value) {
+
+  //console.log(`получили в addCokie name = ${name}, value = ${value}`);
+
+  document.cookie = `${name}=${value}`;
+  addCokieInTable();
+}
+
+
+function getCookiesInObject() {
+  return document.cookie
+      .split('; ')
+      .reduce((prev,current) => {
+        const [name,value] = current.split('=');
+        prev[name] = value;
+
+        return prev;
+      }, {});
+}
+
+
+
+// функция рендеринга
+function addCokieInTable() {
+  //console.log(`получили в addCokieInTable name = ${name}, value = ${value}`);
+  const cookieObject = getCookiesInObject();
+  
+  for (let key in cookieObject) {
+    if (!cookieObject[key]){
+      console.log(`получили пустоту!`);
+      listTable.innerHTML = '';
+    }
+    else{
+      listTable.innerHTML += `
+      <tr>
+        <td class="first_td">${key}</td>
+        <td>${cookieObject[key]}</td>
+        <td>
+          <button class="del" data-key="${key}">Удалить</button>
+        </td>
+      </tr>`;
+    }
+  }
+}
+
+
+
+
+
+function deleteCookie(event) {
+
+  if (event.target.dataset.key) {
+    document.cookie = event.target.dataset.key + `=;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+  }
+  addCokieInTable();
+}
+
+  listTable.addEventListener('click', () => {
+    deleteCookie(event)
+  });
+
+
+console.log(getCookiesInObject())
+
+
+
+
+
+
+
+
+
 filterNameInput.addEventListener('keyup', function() {
     // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
 });
 
 addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
+  addCokie(addNameInput.value, addValueInput.value)
+  //deleteCookie(addNameInput.value)
 });
+
