@@ -38,13 +38,8 @@ const filterNameInput = homeworkContainer.querySelector('#filter-name-input');
 const addNameInput = homeworkContainer.querySelector('#add-name-input');
 // текстовое поле со значением cookie
 const addValueInput = homeworkContainer.querySelector('#add-value-input');
-// кнопка "добавить cookie"
-const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
-// массив кук
-let cookieArray = [];
-
 
 // при загрузке страницы рендерим таблицу с куками
 renderCokieInTable();
@@ -52,141 +47,144 @@ renderCokieInTable();
 // функция для делегирования кликов
 function delegateClick(event) {
 
-  if (event.target.dataset.key) {
-    console.log('Сработало на удаление')
-    deleteCookie(event.target.dataset.key)
-    return
-  }
+    if (event.target.dataset.key) {
+        // console.log('Сработало на удаление')
+        deleteCookie(event.target.dataset.key)
+        
+        return
+    }
 
-  if (event.target.id == 'add-button') {
-    console.log('Сработало на добавление')
-    addCokie(addNameInput.value, addValueInput.value)
-    return
-  }
+    if (event.target.id == 'add-button') {
+        // console.log('Сработало на добавление')
+        addCokie(addNameInput.value, addValueInput.value)
+        
+        return
+    }
 }
-
 
 // функция для добавления кук
 function addCokie(name, value) {
 
-  document.cookie = `${name}=${value}`;
-  renderCokieInTable();
+    document.cookie = `${name}=${value}`;
+    
+    renderCokieInTable();
 }
-
 
 // функция для удаления кук
 function deleteCookie(number) {
-  document.cookie = number + `=;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+    document.cookie = number + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 
-  renderCokieInTable();
+    renderCokieInTable();
 }
-
 
 // функция превращения кук в объект
 function getCookiesInObject() {
-  return document.cookie
-    .split('; ')
-    .reduce((prev, current) => {
-      const [name, value] = current.split('=');
-      prev[name] = value;
+    return document.cookie
+        .split('; ')
+        .reduce((prev, current) => {
+            const [name, value] = current.split('=');
 
-      return prev;
-    }, {});
+            prev[name] = value;
+
+            return prev;
+        }, {});
 }
-
 
 // функция сравнения
 function isMatching(full, chunk) {
-  full = full.toLowerCase();
-  chunk = chunk.toLowerCase();
-  if (full.indexOf(chunk) > -1) {
-    return true;
-  } else {
-    return false;
-  }
-}
+    full = full.toLowerCase();
+    chunk = chunk.toLowerCase();
 
+    if (full.indexOf(chunk) > -1) {
+        return true;
+    } 
+      
+    return false;
+}
 
 // функция обновления таблицы
 function renderCokieInTable() {
-  const cookieObject = getCookiesInObject();
-  listTable.innerHTML = ''; //очищаем каждый раз поля таблицы перед загрузкой куки
+    const cookieObject = getCookiesInObject();
 
-  for (let key in cookieObject) {
+    listTable.innerHTML = ''; // очищаем каждый раз поля таблицы перед загрузкой куки
 
-    if (!cookieObject[key]) {
-      listTable.innerHTML = '';
-      console.log('Куки пустые!')
-      return
+    for (let key in cookieObject) {
+
+        if (!cookieObject[key]) {
+            listTable.innerHTML = '';
+            // console.log('Куки пустые!')
+
+            return
+        }
+
+        listTable.innerHTML += `
+        <tr>
+          <td class="first_td">${key}</td>
+          <td>${cookieObject[key]}</td>
+          <td>
+            <button class="del" data-key="${key}">Удалить</button>
+          </td>
+        </tr>`;
     }
-
-    listTable.innerHTML += `
-    <tr>
-      <td class="first_td">${key}</td>
-      <td>${cookieObject[key]}</td>
-      <td>
-        <button class="del" data-key="${key}">Удалить</button>
-      </td>
-    </tr>`;
-  }
 }
-
 
 // функция поиска кук
 function findCookie() {
-  let cookieObject = getCookiesInObject();
+    let cookieObject = getCookiesInObject();
 
-  if (!filterNameInput.value) {
-    renderCokieInTable()
-    return
-  }
+    if (!filterNameInput.value) {
+        renderCokieInTable()
 
-  for (let key in cookieObject) {
-    if (isMatching(key, filterNameInput.value) || isMatching(cookieObject[key], filterNameInput.value)) {
-      console.log('есть совпадение!')
-      createFilterList(key, cookieObject[key])
+        return
     }
-  }
-}
 
+    for (let key in cookieObject) {
+        if (isMatching(key, filterNameInput.value) || isMatching(cookieObject[key], filterNameInput.value)) {
+            // console.log('есть совпадение!')
+            createFilterList(key, cookieObject[key])
+        }
+    }
+}
 
 // функция для создания поискового списка в таблице
 function createFilterList(key, value) {
-  if (key || value) {
+    if (key || value) {
 
-    listTable.innerHTML += `
-    <tr>
-      <td class="first_td">${key}</td>
-      <td>${value}</td>
-      <td>
-        <button class="del" data-key="${key}">Удалить</button>
-      </td>
-    </tr>`;
-    return
-  }
+        listTable.innerHTML += `
+        <tr>
+          <td class="first_td">${key}</td>
+          <td>${value}</td>
+          <td>
+            <button class="del" data-key="${key}">Удалить</button>
+          </td>
+        </tr>`;
 
-  renderCokieInTable();
+        return
+    }
+
+    renderCokieInTable();
 }
 
-
-//блок слушателей
+// блок слушателей
 filterNameInput.addEventListener('keyup', function () {
 
-  if (document.cookie === '') {
-    renderCokieInTable() //проверка на пустое куки
-    return
-  }
+    if (document.cookie === '') {
+        renderCokieInTable() // проверка на пустое куки
 
-  if (filterNameInput.value) {
-    listTable.innerHTML = '';
-    findCookie() //проверка на пустое поле поиска
-    return
-  }
+        return
+    }
 
-  renderCokieInTable()
+    if (filterNameInput.value) {
+        listTable.innerHTML = '';
+        findCookie() // проверка на пустое поле поиска
+        
+        return
+    }
+
+    renderCokieInTable()
 
 });
 
 document.addEventListener('click', (event) => {
-  delegateClick(event)
+    delegateClick(event)
 });
