@@ -46,12 +46,8 @@ const listTable = homeworkContainer.querySelector('#list-table tbody');
 let cookieArray = [];
 
 
-// при загрузке страницы рендерим таблицу с куками и создаём блок для фильтрации
-addCokieInTable();
-const filterBlock = homeworkContainer.querySelector('#filter-block');
-const newList = document.createElement('ul');
-filterBlock.appendChild(newList);
-
+// при загрузке страницы рендерим таблицу с куками
+renderCokieInTable();
 
 // функция для делегирования кликов
 function delegateClick(event) {
@@ -64,54 +60,61 @@ function delegateClick(event) {
 
   if (event.target.id == 'add-button') {
     console.log('Сработало на добавление')
-    addCokie()
+    addCokie(addNameInput.value, addValueInput.value)
     return
   }
 }
 
 
 // функция для добавления кук
-function addCokie() {
-
-  let name = addNameInput.value;
-  let value = addValueInput.value;
+function addCokie(name, value) {
 
   document.cookie = `${name}=${value}`;
-  addCokieInTable();
+  renderCokieInTable();
 }
 
 
 // функция для удаления кук
 function deleteCookie(number) {
-
   document.cookie = number + `=;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 
-  addCokieInTable();
+  renderCokieInTable();
 }
 
 
 // функция превращения кук в объект
 function getCookiesInObject() {
   return document.cookie
-      .split('; ')
-      .reduce((prev,current) => {
-        const [name,value] = current.split('=');
-        prev[name] = value;
+    .split('; ')
+    .reduce((prev, current) => {
+      const [name, value] = current.split('=');
+      prev[name] = value;
 
-        return prev;
-      }, {});
+      return prev;
+    }, {});
+}
+
+
+// функция сравнения
+function isMatching(full, chunk) {
+  full = full.toLowerCase();
+  chunk = chunk.toLowerCase();
+  if (full.indexOf(chunk) > -1) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 
 // функция обновления таблицы
-function addCokieInTable() {
-  //console.log(`получили в addCokieInTable name = ${name}, value = ${value}`);
+function renderCokieInTable() {
   const cookieObject = getCookiesInObject();
   listTable.innerHTML = ''; //очищаем каждый раз поля таблицы перед загрузкой куки
-  
-  for (let key in cookieObject) {    
 
-    if (!cookieObject[key]){
+  for (let key in cookieObject) {
+
+    if (!cookieObject[key]) {
       listTable.innerHTML = '';
       console.log('Куки пустые!')
       return
@@ -129,47 +132,61 @@ function addCokieInTable() {
 }
 
 
-// функция для кей-апа поисковика
-function onKeyUp() {
-
+// функция поиска кук
+function findCookie() {
   let cookieObject = getCookiesInObject();
- 
+
   if (!filterNameInput.value) {
-      newList.style.display = 'none'
-  } else {
-    newList.style.display = 'block'
+    renderCokieInTable()
+    return
+  }
 
-    for (let key in cookieObject) { 
-      cookieArray
-        .filter(key => isMatching(key, filterNameInput.value))
-        .map(key => `${key}`)
-
-      createFilterList(cookieObject) 
+  for (let key in cookieObject) {
+    if (isMatching(key, filterNameInput.value) || isMatching(cookieObject[key], filterNameInput.value)) {
+      console.log('есть совпадение!')
+      createFilterList(key, cookieObject[key])
     }
-  }  
-}
-
-
-// функция для создания поискового списка
-function createFilterList(what) {
-  newList.innerHTML = '';
-  newList.style.border = '1px solid grey';
-  console.log(`what = ${what}, length of what = ${what.length}`)
-
-  for (let i = 0; i < what.length; i++) {
-    let li = document.createElement('li');
-    li.textContent = what[i];
-    newList.appendChild(li);
   }
 }
 
 
+// функция для создания поискового списка в таблице
+function createFilterList(key, value) {
+  if (key || value) {
+
+    listTable.innerHTML += `
+    <tr>
+      <td class="first_td">${key}</td>
+      <td>${value}</td>
+      <td>
+        <button class="del" data-key="${key}">Удалить</button>
+      </td>
+    </tr>`;
+    return
+  }
+
+  renderCokieInTable();
+}
+
+
 //блок слушателей
-filterNameInput.addEventListener('keyup', function() {
-  onKeyUp()
+filterNameInput.addEventListener('keyup', function () {
+
+  if (document.cookie === '') {
+    renderCokieInTable() //проверка на пустое куки
+    return
+  }
+
+  if (filterNameInput.value) {
+    listTable.innerHTML = '';
+    findCookie() //проверка на пустое поле поиска
+    return
+  }
+
+  renderCokieInTable()
+
 });
 
 document.addEventListener('click', (event) => {
   delegateClick(event)
 });
-
