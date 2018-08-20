@@ -18,11 +18,7 @@ function getCookies() {
 }
 
 function isMatching(full, chunk) {
-  if (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) {
-    return true;
-  } else {
-    return false;
-  }
+  return full.toUpperCase().indexOf(chunk.toUpperCase()) > -1;
 }
 
 // при первой загрузке
