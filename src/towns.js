@@ -58,8 +58,6 @@ function loadTowns() {
         }))
       }
     });
-    xhr.addEventListener('error', reject);
-    xhr.addEventListener('abort', reject);
   })
 }
 

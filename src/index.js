@@ -54,8 +54,6 @@ function loadAndSortTowns() {
         }));
       }
     });
-    xhr.addEventListener('error',reject);
-    xhr.addEventListener('abort', reject);
   })
 }
 
