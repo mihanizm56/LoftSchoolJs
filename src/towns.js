@@ -73,22 +73,16 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
-  full = full.toLowerCase();
-  chunk = chunk.toLowerCase();
-  if (full.indexOf(chunk) > -1) {
-    return true;
-  } else {
-    return false;
-  }
+  return full.toUpperCase().indexOf(chunk.toUpperCase()) > -1;
 }
 
-function createLi(where, what) {
+function createLi(where, array) {
 
   where.innerHTML = '';
-  console.log(`what = ${what}, where = ${where}, length of what = ${what.length}`)
-  for(let i = 0; i < what.length;i++){
+  console.log(`array = ${array}, where = ${where}, length of array = ${array.length}`)
+  for (let i = 0; i < array.length;i++){
     let li = document.createElement('li');
-    li.textContent = what[i];
+    li.textContent = array[i];
     where.appendChild(li);
   }
 }
@@ -115,15 +109,13 @@ loadTowns()
 filterInput.addEventListener('keyup', function () {
   if (!filterInput.value){
     filterResult.innerHTML = ''
+    return
   }
-  else{
     let result = cities
       .filter(item => isMatching(item.name, filterInput.value))
       .map(item => `${item.name}`)
 
     createLi(filterResult, result)
-    
-  }
 });
 
 export {
